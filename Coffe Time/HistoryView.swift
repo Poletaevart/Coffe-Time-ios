@@ -85,10 +85,11 @@ struct HistoryView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
         .sheet(item: $editingDrink) { editing in
-            AddDrinkSheet(milliliters: $editMilliliters, priceRub: $editPriceRub, place: $editPlace, date: $editDate, onSave: {
+            AddDrinkSheet(selectedType: $editSelectedType, milliliters: $editMilliliters, priceRub: $editPriceRub, place: $editPlace, date: $editDate, onSave: {
                 let ml = Int(editMilliliters.filter { $0.isNumber }) ?? 0
                 let price = Double(editPriceRub.replacingOccurrences(of: ",", with: ".")) ?? 0
-                store.updateDrink(editing, date: editDate, milliliters: ml, priceRub: price, place: editPlace)
+                store.updateDrink(editing, date: editDate, milliliters: ml, priceRub: price, place: editPlace, type: editSelectedType)
+
                 clearEdit()
             }, onDelete: {
                 store.deleteDrink(editing)
@@ -115,6 +116,7 @@ struct HistoryView: View {
     @State private var editPriceRub: String = ""
     @State private var editPlace: String = ""
     @State private var editDate: Date = Date()
+    @State private var editSelectedType: CoffeeType = .espresso
 
     private func prefillFrom(_ drink: Drink) {
         editMilliliters = String(drink.milliliters)
@@ -131,5 +133,3 @@ struct HistoryView: View {
         editingDrink = nil
     }
 }
-
-

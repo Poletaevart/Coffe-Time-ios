@@ -91,6 +91,7 @@ struct DrinkRow: View {
 
 struct AddDrinkSheet: View {
     @Binding var selectedType: CoffeeType
+    @Binding var otherName: String
     @Binding var milliliters: String
     @Binding var priceRub: String
     @Binding var place: String
@@ -109,6 +110,12 @@ struct AddDrinkSheet: View {
                         ForEach(CoffeeType.allCases) { type in
                             Text(type.rawValue).tag(type)
                         }
+                    }
+                }
+                if selectedType == .other {
+                    Section("Название напитка") {
+                        TextField("Введите название", text: $otherName)
+                            .textInputAutocapitalization(.words)
                     }
                 }
                 Section("Объем") {
@@ -161,6 +168,7 @@ struct AddDrinkSheet: View {
         let hasML = !milliliters.trimmingCharacters(in: .whitespaces).isEmpty
         let hasPrice = !priceRub.trimmingCharacters(in: .whitespaces).isEmpty
         let hasPlace = !place.trimmingCharacters(in: .whitespaces).isEmpty
-        return hasML || hasPrice || hasPlace
+        let otherOK = (selectedType != .other) || !otherName.trimmingCharacters(in: .whitespaces).isEmpty
+        return (hasML || hasPrice || hasPlace) && otherOK
     }
 }

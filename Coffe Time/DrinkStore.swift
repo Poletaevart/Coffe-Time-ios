@@ -15,28 +15,30 @@ struct Drink: Identifiable, Hashable {
     let priceRub: Double
     let place: String
     let type: CoffeeType
+    let customTypeName: String?
 
-    init(id: UUID = UUID(), date: Date, milliliters: Int, priceRub: Double, place: String, type: CoffeeType) {
+    init(id: UUID = UUID(), date: Date, milliliters: Int, priceRub: Double, place: String, type: CoffeeType, customTypeName: String? = nil) {
         self.id = id
         self.date = date
         self.milliliters = milliliters
         self.priceRub = priceRub
         self.place = place
         self.type = type
+        self.customTypeName = customTypeName
     }
 }
 
 final class DrinkStore: ObservableObject {
     @Published private(set) var drinks: [Drink] = []
 
-    func addDrink(date: Date, milliliters: Int, priceRub: Double, place: String, type: CoffeeType) {
-        let newDrink = Drink(date: date, milliliters: milliliters, priceRub: priceRub, place: place, type: type)
+    func addDrink(date: Date, milliliters: Int, priceRub: Double, place: String, type: CoffeeType, customTypeName: String? = nil) {
+        let newDrink = Drink(date: date, milliliters: milliliters, priceRub: priceRub, place: place, type: type, customTypeName: customTypeName)
         drinks.append(newDrink)
     }
 
-    func updateDrink(_ drink: Drink, date: Date, milliliters: Int, priceRub: Double, place: String, type: CoffeeType) {
+    func updateDrink(_ drink: Drink, date: Date, milliliters: Int, priceRub: Double, place: String, type: CoffeeType, customTypeName: String? = nil) {
         guard let idx = drinks.firstIndex(where: { $0.id == drink.id }) else { return }
-        drinks[idx] = Drink(id: drink.id, date: date, milliliters: milliliters, priceRub: priceRub, place: place, type: type)
+        drinks[idx] = Drink(id: drink.id, date: date, milliliters: milliliters, priceRub: priceRub, place: place, type: type, customTypeName: customTypeName)
     }
 
     func deleteDrink(_ drink: Drink) {

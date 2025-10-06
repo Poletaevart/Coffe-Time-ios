@@ -4,6 +4,7 @@ struct HomeView: View {
     @EnvironmentObject private var store: DrinkStore
     @State private var isAddDrinkPresented: Bool = false
     @State private var selectedType: CoffeeType = .espresso
+    @State private var otherName: String = ""
     @State private var inputMilliliters: String = ""
     @State private var inputPriceRub: String = ""
     @State private var inputPlace: String = ""
@@ -65,6 +66,7 @@ struct HomeView: View {
                                         inputPlace = item.place
                                         inputDate = item.date
                                         selectedType = item.type
+                                        otherName = (item.type == .other) ? (item.customTypeName ?? "") : ""
                                         // Present edit sheet
                                         isEditingDrink = item
                                     }, onDelete: { item in
@@ -109,6 +111,7 @@ struct HomeView: View {
         .sheet(isPresented: $isAddDrinkPresented) {
             AddDrinkSheet(
                 selectedType: $selectedType,
+                otherName: $otherName,
                 milliliters: $inputMilliliters,
                 priceRub: $inputPriceRub,
                 place: $inputPlace,
@@ -122,12 +125,14 @@ struct HomeView: View {
                 inputPlace = ""
                 inputDate = Date()
                 selectedType = .espresso
+                otherName = ""
             }
         }
         // Edit sheet
         .sheet(item: $isEditingDrink) { editing in
             AddDrinkSheet(
                 selectedType: $selectedType,
+                otherName: $otherName,
                 milliliters: $inputMilliliters,
                 priceRub: $inputPriceRub,
                 place: $inputPlace,
@@ -135,12 +140,21 @@ struct HomeView: View {
                 onSave: {
                     let ml = Int(inputMilliliters.filter { $0.isNumber }) ?? 0
                     let price = Double(inputPriceRub.replacingOccurrences(of: ",", with: ".")) ?? 0
-                    store.updateDrink(editing, date: inputDate, milliliters: ml, priceRub: price, place: inputPlace, type: selectedType)
+                    store.updateDrink(
+                        editing,
+                        date: inputDate,
+                        milliliters: ml,
+                        priceRub: price,
+                        place: inputPlace,
+                        type: selectedType,
+                        customTypeName: selectedType == .other ? otherName : nil
+                    )
                     inputMilliliters = ""
                     inputPriceRub = ""
                     inputPlace = ""
                     inputDate = Date()
                     selectedType = .espresso
+                    otherName = ""
                 },
                 onDelete: {
                     store.deleteDrink(editing)
@@ -149,6 +163,7 @@ struct HomeView: View {
                     inputPlace = ""
                     inputDate = Date()
                     selectedType = .espresso
+                    otherName = ""
                 },
                 isEditing: true
             )
@@ -167,7 +182,7 @@ extension HomeView {
                 VStack(alignment: .leading) {
                     Text(drink.place)
                         .font(.headline)
-                    Text(drink.type.rawValue)
+                    Text(drink.customTypeName ?? drink.type.rawValue)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
@@ -178,18 +193,14 @@ extension HomeView {
                     Text(String(format: "%.0f ₽", drink.priceRub))
                         .font(.subheadline)
                 }
-                Button(action: { onEdit(drink) }) {
-                    Image(systemName: "pencil")
-                }
-                .buttonStyle(BorderlessButtonStyle())
-                Button(action: { onDelete(drink) }) {
-                    Image(systemName: "trash")
-                }
-                .buttonStyle(BorderlessButtonStyle())
             }
             .padding()
             .background(Color(.secondarySystemBackground))
             .cornerRadius(10)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                onEdit(drink)
+            }
         }
     }
 }

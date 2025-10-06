@@ -68,7 +68,7 @@ struct HistoryView: View {
                     ScrollView {
                         LazyVStack(spacing: 10) {
                             ForEach(showAllTime ? store.drinks : store.drinks(for: selectedMonth)) { drink in
-                                DrinkRow(drink: drink, onEdit: { item in
+                                HomeView.DrinkRow(drink: drink, onEdit: { item in
                                     editingDrink = item
                                     // route edit via sheet below
                                     prefillFrom(item)
@@ -85,7 +85,7 @@ struct HistoryView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
         .sheet(item: $editingDrink) { editing in
-            AddDrinkSheet(selectedType: $editSelectedType, milliliters: $editMilliliters, priceRub: $editPriceRub, place: $editPlace, date: $editDate, onSave: {
+            AddDrinkSheet(selectedType: $editSelectedType, otherName: $editOtherName, milliliters: $editMilliliters, priceRub: $editPriceRub, place: $editPlace, date: $editDate, onSave: {
                 let ml = Int(editMilliliters.filter { $0.isNumber }) ?? 0
                 let price = Double(editPriceRub.replacingOccurrences(of: ",", with: ".")) ?? 0
                 store.updateDrink(editing, date: editDate, milliliters: ml, priceRub: price, place: editPlace, type: editSelectedType)
@@ -117,12 +117,15 @@ struct HistoryView: View {
     @State private var editPlace: String = ""
     @State private var editDate: Date = Date()
     @State private var editSelectedType: CoffeeType = .espresso
+    @State private var editOtherName: String = ""
 
     private func prefillFrom(_ drink: Drink) {
         editMilliliters = String(drink.milliliters)
         editPriceRub = String(Int(drink.priceRub))
         editPlace = drink.place
         editDate = drink.date
+        editSelectedType = drink.type
+        editOtherName = (drink.type == .other) ? (drink.customTypeName ?? "") : ""
     }
 
     private func clearEdit() {
@@ -130,6 +133,7 @@ struct HistoryView: View {
         editPriceRub = ""
         editPlace = ""
         editDate = Date()
+        editOtherName = ""
         editingDrink = nil
     }
 }

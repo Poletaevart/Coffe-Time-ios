@@ -3,6 +3,8 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject private var store: DrinkStore
     @State private var isAddDrinkPresented: Bool = false
+    @State private var selectedType: CoffeeType = .espresso
+    @State private var otherName: String = ""
     @State private var inputMilliliters: String = ""
     @State private var inputPriceRub: String = ""
     @State private var inputPlace: String = ""
@@ -63,6 +65,8 @@ struct HomeView: View {
                                         inputPriceRub = String(Int(item.priceRub))
                                         inputPlace = item.place
                                         inputDate = item.date
+                                        selectedType = item.type
+                                        otherName = (item.type == .other) ? (item.customTypeName ?? "") : ""
                                         // Present edit sheet
                                         isEditingDrink = item
                                     }, onDelete: { item in
@@ -106,6 +110,8 @@ struct HomeView: View {
         }
         .sheet(isPresented: $isAddDrinkPresented) {
             AddDrinkSheet(
+                selectedType: $selectedType,
+                otherName: $otherName,
                 milliliters: $inputMilliliters,
                 priceRub: $inputPriceRub,
                 place: $inputPlace,
@@ -113,40 +119,88 @@ struct HomeView: View {
             ) {
                 let ml = Int(inputMilliliters.filter { $0.isNumber }) ?? 0
                 let price = Double(inputPriceRub.replacingOccurrences(of: ",", with: ".")) ?? 0
-                store.addDrink(date: inputDate, milliliters: ml, priceRub: price, place: inputPlace)
+                store.addDrink(date: inputDate, milliliters: ml, priceRub: price, place: inputPlace, type: selectedType)
                 inputMilliliters = ""
                 inputPriceRub = ""
                 inputPlace = ""
                 inputDate = Date()
+                selectedType = .espresso
+                otherName = ""
             }
         }
         // Edit sheet
         .sheet(item: $isEditingDrink) { editing in
             AddDrinkSheet(
+                selectedType: $selectedType,
+                otherName: $otherName,
                 milliliters: $inputMilliliters,
                 priceRub: $inputPriceRub,
                 place: $inputPlace,
                 date: $inputDate,
                 onSave: {
-                let ml = Int(inputMilliliters.filter { $0.isNumber }) ?? 0
-                let price = Double(inputPriceRub.replacingOccurrences(of: ",", with: ".")) ?? 0
-                store.updateDrink(editing, date: inputDate, milliliters: ml, priceRub: price, place: inputPlace)
-                inputMilliliters = ""
-                inputPriceRub = ""
-                inputPlace = ""
-                inputDate = Date()
-            },
+                    let ml = Int(inputMilliliters.filter { $0.isNumber }) ?? 0
+                    let price = Double(inputPriceRub.replacingOccurrences(of: ",", with: ".")) ?? 0
+                    store.updateDrink(
+                        editing,
+                        date: inputDate,
+                        milliliters: ml,
+                        priceRub: price,
+                        place: inputPlace,
+                        type: selectedType,
+                        customTypeName: selectedType == .other ? otherName : nil
+                    )
+                    inputMilliliters = ""
+                    inputPriceRub = ""
+                    inputPlace = ""
+                    inputDate = Date()
+                    selectedType = .espresso
+                    otherName = ""
+                },
                 onDelete: {
-                store.deleteDrink(editing)
-                inputMilliliters = ""
-                inputPriceRub = ""
-                inputPlace = ""
-                inputDate = Date()
-            },
+                    store.deleteDrink(editing)
+                    inputMilliliters = ""
+                    inputPriceRub = ""
+                    inputPlace = ""
+                    inputDate = Date()
+                    selectedType = .espresso
+                    otherName = ""
+                },
                 isEditing: true
             )
         }
     }
 }
 
+extension HomeView {
+    struct DrinkRow: View {
+        let drink: Drink
+        let onEdit: (Drink) -> Void
+        let onDelete: (Drink) -> Void
 
+        var body: some View {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(drink.place)
+                        .font(.headline)
+                    Text(drink.customTypeName ?? drink.type.rawValue)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                Spacer()
+                VStack(alignment: .trailing) {
+                    Text("\(drink.milliliters) мл")
+                        .font(.subheadline)
+                    Text(String(format: "%.0f ₽", drink.priceRub))
+                        .font(.subheadline)
+                }
+            }
+            .padding()
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(10)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                onEdit(drink)
+            }
+        }
+    }
+}

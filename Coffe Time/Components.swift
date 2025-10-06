@@ -1,6 +1,29 @@
 import SwiftUI
 import Foundation
 
+enum CoffeeType: String, CaseIterable, Identifiable, Codable {
+    case espresso = "Эспрессо"
+    case doppio = "Доппио"
+    case americano = "Американо"
+    case latte = "Латте"
+    case cappuccino = "Капучино"
+    case flatWhite = "Флэт уайт"
+    case mocha = "Мокко"
+    case macchiato = "Маккиато"
+    case ristretto = "Ристретто"
+    case filter = "Фильтр"
+    case aeropress = "Аэропресс"
+    case v60 = "V60"
+    case chemex = "Кемекс"
+    case cezve = "Турка"
+    case capsule = "Капсульный"
+    case coldBrew = "Холодный"
+    case matcha = "Матча"
+    case other = "Другое"
+
+    var id: String { rawValue }
+}
+
 struct StatTile: View {
     let title: String
     let value: String
@@ -67,6 +90,8 @@ struct DrinkRow: View {
 }
 
 struct AddDrinkSheet: View {
+    @Binding var selectedType: CoffeeType
+    @Binding var otherName: String
     @Binding var milliliters: String
     @Binding var priceRub: String
     @Binding var place: String
@@ -80,6 +105,19 @@ struct AddDrinkSheet: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section("Тип напитка") {
+                    Picker("Выберите тип", selection: $selectedType) {
+                        ForEach(CoffeeType.allCases) { type in
+                            Text(type.rawValue).tag(type)
+                        }
+                    }
+                }
+                if selectedType == .other {
+                    Section("Название напитка") {
+                        TextField("Введите название", text: $otherName)
+                            .textInputAutocapitalization(.words)
+                    }
+                }
                 Section("Объем") {
                     TextField("Миллилитры", text: $milliliters)
                         .keyboardType(.numberPad)
@@ -130,8 +168,7 @@ struct AddDrinkSheet: View {
         let hasML = !milliliters.trimmingCharacters(in: .whitespaces).isEmpty
         let hasPrice = !priceRub.trimmingCharacters(in: .whitespaces).isEmpty
         let hasPlace = !place.trimmingCharacters(in: .whitespaces).isEmpty
-        return hasML || hasPrice || hasPlace
+        let otherOK = (selectedType != .other) || !otherName.trimmingCharacters(in: .whitespaces).isEmpty
+        return (hasML || hasPrice || hasPlace) && otherOK
     }
 }
-
-

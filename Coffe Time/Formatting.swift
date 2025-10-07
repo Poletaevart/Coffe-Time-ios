@@ -34,6 +34,12 @@ enum AppFormatting {
         nf.maximumFractionDigits = noFractions ? 0 : 2
         return nf.string(from: NSNumber(value: amount)) ?? "₽\(Int(amount))"
     }
+    static func shortDate(_ date: Date) -> String {
+        let df = DateFormatter()
+        df.locale = ruLocale
+        df.dateFormat = "d MMMM, HH:mm"
+        return df.string(from: date)
+    }
 }
 
 

@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  Coffe Time
+//  Coffee Time
 //
 //  Created by Artem Poletaev on 03.10.2025.
 //
@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var store = DrinkStore()
     var body: some View {
         TabView {
             HomeView()
-                .environmentObject(store)
-                .tabItem { Label("Главная", systemImage: "house.fill") }
+                .tabItem {
+                    Label("Главная", systemImage: "house.fill")
+                }
 
             HistoryView()
-                .environmentObject(store)
-                .tabItem { Label("История", systemImage: "clock") }
+                .tabItem {
+                    Label("История", systemImage: "clock")
+                }
         }
         .tint(.accentColor)
         .toolbarBackground(.ultraThinMaterial, for: .tabBar)
@@ -28,4 +29,3 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
-

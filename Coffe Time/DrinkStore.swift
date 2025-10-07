@@ -1,6 +1,6 @@
 //
 //  DrinkStore.swift
-//  Coffe Time
+//  Coffee Time
 //
 //  Created by Assistant.
 //
@@ -8,7 +8,9 @@
 import Foundation
 import Combine
 
-struct Drink: Identifiable, Hashable {
+// MARK: - Drink Model
+
+struct Drink: Identifiable, Hashable, Codable {
     let id: UUID
     let date: Date
     let milliliters: Int
@@ -17,7 +19,15 @@ struct Drink: Identifiable, Hashable {
     let type: CoffeeType
     let customTypeName: String?
 
-    init(id: UUID = UUID(), date: Date, milliliters: Int, priceRub: Double, place: String, type: CoffeeType, customTypeName: String? = nil) {
+    init(
+        id: UUID = UUID(),
+        date: Date,
+        milliliters: Int,
+        priceRub: Double,
+        place: String,
+        type: CoffeeType,
+        customTypeName: String? = nil
+    ) {
         self.id = id
         self.date = date
         self.milliliters = milliliters
@@ -28,8 +38,31 @@ struct Drink: Identifiable, Hashable {
     }
 }
 
+// MARK: - Drink Store
+
+@MainActor
 final class DrinkStore: ObservableObject {
     @Published private(set) var drinks: [Drink] = []
+    private var cancellables = Set<AnyCancellable>()
+    private let saveURL: URL
+
+    init() {
+        let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        saveURL = folder.appendingPathComponent("drinks.json")
+
+        load()
+
+        // Автосохранение при изменениях
+        $drinks
+            .dropFirst()
+            .debounce(for: .milliseconds(400), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.save()
+            }
+            .store(in: &cancellables)
+    }
+
+    // MARK: - CRUD
 
     func addDrink(date: Date, milliliters: Int, priceRub: Double, place: String, type: CoffeeType, customTypeName: String? = nil) {
         let newDrink = Drink(date: date, milliliters: milliliters, priceRub: priceRub, place: place, type: type, customTypeName: customTypeName)
@@ -45,36 +78,25 @@ final class DrinkStore: ObservableObject {
         drinks.removeAll { $0.id == drink.id }
     }
 
+    // MARK: - Persistence
+
+    private func load() {
+        guard let data = try? Data(contentsOf: saveURL) else { return }
+        if let decoded = try? JSONDecoder().decode([Drink].self, from: data) {
+            self.drinks = decoded
+        }
+    }
+
+    private func save() {
+        guard let data = try? JSONEncoder().encode(drinks) else { return }
+        try? data.write(to: saveURL, options: [.atomic])
+    }
+
     // MARK: - Monthly Aggregates
 
-    var currentMonthDrinks: [Drink] {
-        let calendar = Calendar.current
-        let now = Date()
-        guard let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: now)) else { return [] }
-        let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth) ?? now
-        return drinks.filter { $0.date >= startOfMonth && $0.date <= endOfMonth }
-    }
-
-    var currentMonthCupsCount: Int {
-        currentMonthDrinks.count
-    }
-
-    var currentMonthTotalMilliliters: Int {
-        currentMonthDrinks.reduce(0) { $0 + $1.milliliters }
-    }
-
-    var currentMonthTotalPriceRub: Double {
-        currentMonthDrinks.reduce(0) { $0 + $1.priceRub }
-    }
-}
-
-// MARK: - Month filtering helpers
-extension DrinkStore {
     func drinks(for monthDate: Date) -> [Drink] {
-        let calendar = Calendar.current
-        guard let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: monthDate)) else { return [] }
-        let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth) ?? monthDate
-        return drinks.filter { $0.date >= startOfMonth && $0.date <= endOfMonth }
+        guard let interval = Calendar.current.dateInterval(of: .month, for: monthDate) else { return [] }
+        return drinks.filter { interval.contains($0.date) }.sorted { $0.date > $1.date }
     }
 
     func cupsCount(for monthDate: Date) -> Int {
@@ -89,7 +111,8 @@ extension DrinkStore {
         drinks(for: monthDate).reduce(0) { $0 + $1.priceRub }
     }
 
-    // All-time aggregates
+    // MARK: - All-time stats
+
     var allTimeCupsCount: Int { drinks.count }
     var allTimeTotalMilliliters: Int { drinks.reduce(0) { $0 + $1.milliliters } }
     var allTimeTotalPriceRub: Double { drinks.reduce(0) { $0 + $1.priceRub } }

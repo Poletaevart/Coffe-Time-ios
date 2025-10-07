@@ -19,9 +19,9 @@ struct HomeView: View {
             VStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack(spacing: 12) {
-                        StatTile(title: "Чашек", value: "\(store.currentMonthCupsCount)")
-                        StatTile(title: "мл", value: "\(store.currentMonthTotalMilliliters)")
-                        StatTile(title: "₽", value: String(format: "%.0f", store.currentMonthTotalPriceRub))
+                        StatTile(title: "Чашек", value: "\(store.cupsCount(for: Date()))")
+                        StatTile(title: "мл", value: "\(store.totalMilliliters(for: Date()))")
+                        StatTile(title: "₽", value: String(format: "%.0f", store.totalPriceRub(for: Date())))
                     }
                 }
                 .padding(20)
@@ -35,8 +35,8 @@ struct HomeView: View {
                             .font(.headline)
                             .foregroundStyle(.primary)
                         Spacer()
-                        if !store.currentMonthDrinks.isEmpty {
-                            Text("\(store.currentMonthDrinks.count)")
+                        if !store.drinks(for: Date()).isEmpty {
+                            Text("\(store.drinks(for: Date()).count)")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                                 .padding(.horizontal, 8)
@@ -45,7 +45,7 @@ struct HomeView: View {
                         }
                     }
 
-                    if store.currentMonthDrinks.isEmpty {
+                    if store.drinks(for: Date()).isEmpty {
                         HStack(spacing: 10) {
                             Image(systemName: "tray")
                                 .foregroundStyle(.secondary)
@@ -59,7 +59,7 @@ struct HomeView: View {
                     } else {
                         ScrollView {
                             LazyVStack(spacing: 10) {
-                                ForEach(store.currentMonthDrinks) { drink in
+                                ForEach(store.drinks(for: Date())) { drink in
                                     DrinkRow(drink: drink, onEdit: { item in
                                         inputMilliliters = String(item.milliliters)
                                         inputPriceRub = String(Int(item.priceRub))
@@ -76,11 +76,10 @@ struct HomeView: View {
                             }
                             .padding(.vertical, 2)
                         }
-                        .frame(maxHeight: 260)
                     }
                 }
                 .padding(16)
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
                 .shadow(color: Color.black.opacity(0.06), radius: 16, x: 0, y: 8)
             }
@@ -108,66 +107,126 @@ struct HomeView: View {
                 .padding(.bottom, 8)
             }
         }
+        // Форма добавления напитка
         .sheet(isPresented: $isAddDrinkPresented) {
-            AddDrinkSheet(
-                selectedType: $selectedType,
-                otherName: $otherName,
-                milliliters: $inputMilliliters,
-                priceRub: $inputPriceRub,
-                place: $inputPlace,
-                date: $inputDate
-            ) {
-                let ml = Int(inputMilliliters.filter { $0.isNumber }) ?? 0
-                let price = Double(inputPriceRub.replacingOccurrences(of: ",", with: ".")) ?? 0
-                store.addDrink(date: inputDate, milliliters: ml, priceRub: price, place: inputPlace, type: selectedType)
-                inputMilliliters = ""
-                inputPriceRub = ""
-                inputPlace = ""
-                inputDate = Date()
-                selectedType = .espresso
-                otherName = ""
+            NavigationStack {
+                Form {
+                    DatePicker("Дата", selection: $inputDate, displayedComponents: [.date, .hourAndMinute])
+
+                    Picker("Тип", selection: $selectedType) {
+                        ForEach(CoffeeType.allCases) { type in
+                            Text(type.rawValue).tag(type)
+                        }
+                    }
+
+                    if selectedType == .other {
+                        TextField("Название напитка", text: $otherName)
+                    }
+
+                    TextField("Миллилитры", text: $inputMilliliters)
+                        .keyboardType(.numberPad)
+                    TextField("Цена (₽)", text: $inputPriceRub)
+                        .keyboardType(.decimalPad)
+                    TextField("Где пил", text: $inputPlace)
+                }
+                .navigationTitle("Добавить кофе")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Отмена") { isAddDrinkPresented = false }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Сохранить") {
+                            let ml = Int(inputMilliliters.filter { $0.isNumber }) ?? 0
+                            let price = Double(inputPriceRub.replacingOccurrences(of: ",", with: ".")) ?? 0
+                            store.addDrink(
+                                date: inputDate,
+                                milliliters: ml,
+                                priceRub: price,
+                                place: inputPlace,
+                                type: selectedType,
+                                customTypeName: selectedType == .other ? otherName : nil
+                            )
+                            clearInput()
+                            isAddDrinkPresented = false
+                        }
+                        .disabled(!isAddValid)
+                    }
+                }
             }
         }
-        // Edit sheet
+        // Форма редактирования напитка
         .sheet(item: $isEditingDrink) { editing in
-            AddDrinkSheet(
-                selectedType: $selectedType,
-                otherName: $otherName,
-                milliliters: $inputMilliliters,
-                priceRub: $inputPriceRub,
-                place: $inputPlace,
-                date: $inputDate,
-                onSave: {
-                    let ml = Int(inputMilliliters.filter { $0.isNumber }) ?? 0
-                    let price = Double(inputPriceRub.replacingOccurrences(of: ",", with: ".")) ?? 0
-                    store.updateDrink(
-                        editing,
-                        date: inputDate,
-                        milliliters: ml,
-                        priceRub: price,
-                        place: inputPlace,
-                        type: selectedType,
-                        customTypeName: selectedType == .other ? otherName : nil
-                    )
-                    inputMilliliters = ""
-                    inputPriceRub = ""
-                    inputPlace = ""
-                    inputDate = Date()
-                    selectedType = .espresso
-                    otherName = ""
-                },
-                onDelete: {
-                    store.deleteDrink(editing)
-                    inputMilliliters = ""
-                    inputPriceRub = ""
-                    inputPlace = ""
-                    inputDate = Date()
-                    selectedType = .espresso
-                    otherName = ""
-                },
-                isEditing: true
-            )
+            NavigationStack {
+                Form {
+                    DatePicker("Дата", selection: $inputDate, displayedComponents: [.date, .hourAndMinute])
+
+                    Picker("Тип", selection: $selectedType) {
+                        ForEach(CoffeeType.allCases) { type in
+                            Text(type.rawValue).tag(type)
+                        }
+                    }
+
+                    if selectedType == .other {
+                        TextField("Название напитка", text: $otherName)
+                    }
+
+                    TextField("Миллилитры", text: $inputMilliliters)
+                        .keyboardType(.numberPad)
+                    TextField("Цена (₽)", text: $inputPriceRub)
+                        .keyboardType(.decimalPad)
+                    TextField("Где пил", text: $inputPlace)
+                }
+                .navigationTitle("Редактировать кофе")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Отмена") { isEditingDrink = nil }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Сохранить") {
+                            let ml = Int(inputMilliliters.filter { $0.isNumber }) ?? 0
+                            let price = Double(inputPriceRub.replacingOccurrences(of: ",", with: ".")) ?? 0
+                            store.updateDrink(
+                                editing,
+                                date: inputDate,
+                                milliliters: ml,
+                                priceRub: price,
+                                place: inputPlace,
+                                type: selectedType,
+                                customTypeName: selectedType == .other ? otherName : nil
+                            )
+                            clearInput()
+                            isEditingDrink = nil
+                        }
+                        .disabled(!isAddValid)
+                    }
+                    ToolbarItem(placement: .bottomBar) {
+                        Button(role: .destructive) {
+                            store.deleteDrink(editing)
+                            clearInput()
+                            isEditingDrink = nil
+                        } label: {
+                            Label("Удалить", systemImage: "trash")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                }
+            }
         }
+    }
+
+    private var isAddValid: Bool {
+        let hasML = Int(inputMilliliters) ?? 0 > 0
+        let hasType = (selectedType != .other) || !otherName.trimmingCharacters(in: .whitespaces).isEmpty
+        return hasML && hasType
+    }
+
+    private func clearInput() {
+        inputMilliliters = ""
+        inputPriceRub = ""
+        inputPlace = ""
+        inputDate = Date()
+        selectedType = .espresso
+        otherName = ""
     }
 }
 
@@ -179,11 +238,14 @@ extension HomeView {
 
         var body: some View {
             HStack {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(drink.place)
                         .font(.headline)
                     Text(drink.customTypeName ?? drink.type.rawValue)
                         .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Text(AppFormatting.shortDate(drink.date))
+                        .font(.caption)
                         .foregroundColor(.secondary)
                 }
                 Spacer()

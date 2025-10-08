@@ -14,11 +14,19 @@ struct ContentView: View {
                 .tabItem {
                     Label("Главная", systemImage: "house.fill")
                 }
+            
+            GrainsView()
+                .environmentObject(GrainStore())
+                .tabItem {
+                    Label("Обжарочная", systemImage: "leaf.fill")
+                }
 
             HistoryView()
                 .tabItem {
                     Label("История", systemImage: "clock")
                 }
+            
+            
         }
         .tint(.accentColor)
         .toolbarBackground(.ultraThinMaterial, for: .tabBar)

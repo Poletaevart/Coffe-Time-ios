@@ -171,25 +171,12 @@ struct GrainsView: View {
                     ScrollView {
                         VStack(spacing: 12) {
                             ForEach(filteredGrains) { grain in
-                                VStack(alignment: .leading, spacing: 6) {
-                                    HStack {
-                                        Text(grain.name)
-                                            .font(.headline)
-                                        Spacer()
-                                        Text("\(Int(grain.weight)) г — \(Int(grain.price)) ₽")
-                                            .font(.subheadline)
-                                            .foregroundColor(.secondary)
-                                    }
-                                    
-                                    Text(formattedDate(grain.date))
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color(.systemGray6))
-                                .cornerRadius(16)
-                                .padding(.horizontal)
+                                HistoryItemView(
+                                    title: grain.name,
+                                    subtitle: "\(Int(grain.weight)) г",
+                                    amount: "\(Int(grain.price)) ₽",
+                                    date: formattedDate(grain.date)
+                                )
                             }
                         }
                         .padding(.vertical, 10)

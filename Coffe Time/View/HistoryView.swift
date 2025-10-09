@@ -111,13 +111,16 @@ struct HistoryView: View {
                     ScrollView {
                         LazyVStack(spacing: 10) {
                             ForEach(showAllTime ? store.drinks : (showYearOnly ? drinks(forYear: selectedYear) : store.drinks(for: selectedMonth))) { drink in
-                                HomeView.DrinkRow(drink: drink, onEdit: { item in
-                                    editingDrink = item
-                                    // route edit via sheet below
-                                    prefillFrom(item)
-                                }, onDelete: { item in
-                                    store.deleteDrink(item)
-                                })
+                                HistoryItemView(
+                                    title: drink.customTypeName ?? drink.type.rawValue,
+                                    subtitle: "\(drink.milliliters) мл — \(drink.place)",
+                                    amount: String(format: "%.0f ₽", drink.priceRub),
+                                    date: AppFormatting.shortDate(drink.date)
+                                )
+                                .onTapGesture {
+                                    editingDrink = drink
+                                    prefillFrom(drink)
+                                }
                             }
                         }
                         .padding(.vertical, 2)

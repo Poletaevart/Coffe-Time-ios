@@ -29,61 +29,59 @@ struct HomeView: View {
                 .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
                 .shadow(color: Color.black.opacity(0.08), radius: 20, x: 0, y: 10)
 
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Text("История за \(AppFormatting.monthTitle(for: Date()))")
-                            .font(.headline)
-                            .foregroundStyle(.primary)
-                        Spacer()
-                        if !store.drinks(for: Date()).isEmpty {
-                            Text("\(store.drinks(for: Date()).count)")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(.thinMaterial, in: Capsule())
-                        }
-                    }
+                HStack(spacing: 6) {
+                    Text("История")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
+                    Text(AppFormatting.monthTitle(for: Date()))
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 18)
+                .padding(.top, 16)
+                .padding(.bottom, 4)
 
-                    if store.drinks(for: Date()).isEmpty {
-                        HStack(spacing: 10) {
-                            Image(systemName: "tray")
-                                .foregroundStyle(.secondary)
-                            Text("Пока пусто. Добавьте первый кофе")
-                                .foregroundStyle(.secondary)
-                                .font(.subheadline)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(16)
-                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    } else {
-                        ScrollView {
-                            LazyVStack(spacing: 10) {
-                                ForEach(store.drinks(for: Date())) { drink in
-                                    DrinkRow(drink: drink, onEdit: { item in
-                                        inputMilliliters = String(item.milliliters)
-                                        inputPriceRub = String(Int(item.priceRub))
-                                        inputPlace = item.place
-                                        inputDate = item.date
-                                        selectedType = item.type
-                                        otherName = (item.type == .other) ? (item.customTypeName ?? "") : ""
-                                        // Present edit sheet
-                                        isEditingDrink = item
-                                    }, onDelete: { item in
-                                        store.deleteDrink(item)
-                                    })
+                if store.drinks(for: Date()).isEmpty {
+                    VStack(spacing: 10) {
+                        Image(systemName: "tray")
+                            .foregroundStyle(.secondary)
+                        Text("Пока пусто. Добавьте первый кофе")
+                            .foregroundStyle(.secondary)
+                            .font(.subheadline)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(16)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(16)
+                    .padding(.horizontal, 20)
+                } else {
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            ForEach(store.drinks(for: Date())) { drink in
+                                HistoryItemView(
+                                    title: drink.customTypeName ?? drink.type.rawValue,
+                                    subtitle: drink.place,
+                                    amount: "\(drink.milliliters) мл — " + String(format: "%.0f ₽", drink.priceRub),
+                                    date: AppFormatting.shortDate(drink.date)
+                                )
+                                .onTapGesture {
+                                    inputMilliliters = String(drink.milliliters)
+                                    inputPriceRub = String(Int(drink.priceRub))
+                                    inputPlace = drink.place
+                                    inputDate = drink.date
+                                    selectedType = drink.type
+                                    otherName = (drink.type == .other) ? (drink.customTypeName ?? "") : ""
+                                    isEditingDrink = drink
                                 }
                             }
-                            .padding(.vertical, 2)
                         }
+                        .padding(.vertical, 10)
                     }
                 }
-                .padding(16)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                .shadow(color: Color.black.opacity(0.06), radius: 16, x: 0, y: 8)
             }
-            .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
         .safeAreaInset(edge: .bottom) {
@@ -231,6 +229,7 @@ struct HomeView: View {
 }
 
 extension HomeView {
+    /*
     struct DrinkRow: View {
         let drink: Drink
         let onEdit: (Drink) -> Void
@@ -265,4 +264,5 @@ extension HomeView {
             }
         }
     }
+    */
 }

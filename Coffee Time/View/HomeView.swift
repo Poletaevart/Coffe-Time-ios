@@ -226,43 +226,52 @@ struct HomeView: View {
         selectedType = .espresso
         otherName = ""
     }
+    
+   
 }
 
 extension HomeView {
     /*
-    struct DrinkRow: View {
-        let drink: Drink
-        let onEdit: (Drink) -> Void
-        let onDelete: (Drink) -> Void
-
-        var body: some View {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(drink.place)
-                        .font(.headline)
-                    Text(drink.customTypeName ?? drink.type.rawValue)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    Text(AppFormatting.shortDate(drink.date))
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                Spacer()
-                VStack(alignment: .trailing) {
-                    Text("\(drink.milliliters) мл")
-                        .font(.subheadline)
-                    Text(String(format: "%.0f ₽", drink.priceRub))
-                        .font(.subheadline)
-                }
-            }
-            .padding()
-            .background(Color(.secondarySystemBackground))
-            .cornerRadius(10)
-            .contentShape(Rectangle())
-            .onTapGesture {
-                onEdit(drink)
-            }
-        }
-    }
-    */
+     struct DrinkRow: View {
+     let drink: Drink
+     let onEdit: (Drink) -> Void
+     let onDelete: (Drink) -> Void
+     
+     var body: some View {
+     HStack {
+     VStack(alignment: .leading, spacing: 4) {
+     Text(drink.place)
+     .font(.headline)
+     Text(drink.customTypeName ?? drink.type.rawValue)
+     .font(.subheadline)
+     .foregroundColor(.secondary)
+     Text(AppFormatting.shortDate(drink.date))
+     .font(.caption)
+     .foregroundColor(.secondary)
+     }
+     Spacer()
+     VStack(alignment: .trailing) {
+     Text("\(drink.milliliters) мл")
+     .font(.subheadline)
+     Text(String(format: "%.0f ₽", drink.priceRub))
+     .font(.subheadline)
+     }
+     }
+     .padding()
+     .background(Color(.secondarySystemBackground))
+     .cornerRadius(10)
+     .contentShape(Rectangle())
+     .onTapGesture {
+     onEdit(drink)
+     }
+     }
+     }
+     
+     */
+   
+    
+    
+}
+#Preview {
+    HomeView()
 }

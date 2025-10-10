@@ -12,7 +12,7 @@ struct ContentView: View {
         TabView {
             HomeView()
                 .tabItem {
-                    Label("Главная", systemImage: "house.fill")
+                    Label("Главная", systemImage: "cup.and.saucer.fill")
                 }
             
             GrainsView()

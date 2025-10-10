@@ -24,25 +24,25 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5C032E132E9009C800C1F2DB /* Coffe Time.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Coffe Time.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5C032E202E9009CA00C1F2DB /* Coffe TimeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Coffe TimeTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5C032E2A2E9009CA00C1F2DB /* Coffe TimeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Coffe TimeUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C032E132E9009C800C1F2DB /* Coffee Time.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Coffee Time.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C032E202E9009CA00C1F2DB /* Coffee TimeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Coffee TimeTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C032E2A2E9009CA00C1F2DB /* Coffee TimeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Coffee TimeUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5C032E152E9009C800C1F2DB /* Coffe Time */ = {
+		5C032E152E9009C800C1F2DB /* Coffee Time */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Coffe Time";
+			path = "Coffee Time";
 			sourceTree = "<group>";
 		};
-		5C032E232E9009CA00C1F2DB /* Coffe TimeTests */ = {
+		5C032E232E9009CA00C1F2DB /* Coffee TimeTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Coffe TimeTests";
+			path = "Coffee TimeTests";
 			sourceTree = "<group>";
 		};
-		5C032E2D2E9009CA00C1F2DB /* Coffe TimeUITests */ = {
+		5C032E2D2E9009CA00C1F2DB /* Coffee TimeUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Coffe TimeUITests";
+			path = "Coffee TimeUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +75,9 @@
 		5C032E0A2E9009C800C1F2DB = {
 			isa = PBXGroup;
 			children = (
-				5C032E152E9009C800C1F2DB /* Coffe Time */,
-				5C032E232E9009CA00C1F2DB /* Coffe TimeTests */,
-				5C032E2D2E9009CA00C1F2DB /* Coffe TimeUITests */,
+				5C032E152E9009C800C1F2DB /* Coffee Time */,
+				5C032E232E9009CA00C1F2DB /* Coffee TimeTests */,
+				5C032E2D2E9009CA00C1F2DB /* Coffee TimeUITests */,
 				5C032E142E9009C800C1F2DB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,9 +85,9 @@
 		5C032E142E9009C800C1F2DB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5C032E132E9009C800C1F2DB /* Coffe Time.app */,
-				5C032E202E9009CA00C1F2DB /* Coffe TimeTests.xctest */,
-				5C032E2A2E9009CA00C1F2DB /* Coffe TimeUITests.xctest */,
+				5C032E132E9009C800C1F2DB /* Coffee Time.app */,
+				5C032E202E9009CA00C1F2DB /* Coffee TimeTests.xctest */,
+				5C032E2A2E9009CA00C1F2DB /* Coffee TimeUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5C032E122E9009C800C1F2DB /* Coffe Time */ = {
+		5C032E122E9009C800C1F2DB /* Coffee Time */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5C032E342E9009CA00C1F2DB /* Build configuration list for PBXNativeTarget "Coffe Time" */;
+			buildConfigurationList = 5C032E342E9009CA00C1F2DB /* Build configuration list for PBXNativeTarget "Coffee Time" */;
 			buildPhases = (
 				5C032E0F2E9009C800C1F2DB /* Sources */,
 				5C032E102E9009C800C1F2DB /* Frameworks */,
@@ -108,18 +108,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				5C032E152E9009C800C1F2DB /* Coffe Time */,
+				5C032E152E9009C800C1F2DB /* Coffee Time */,
 			);
-			name = "Coffe Time";
+			name = "Coffee Time";
 			packageProductDependencies = (
 			);
 			productName = "Coffe Time";
-			productReference = 5C032E132E9009C800C1F2DB /* Coffe Time.app */;
+			productReference = 5C032E132E9009C800C1F2DB /* Coffee Time.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5C032E1F2E9009CA00C1F2DB /* Coffe TimeTests */ = {
+		5C032E1F2E9009CA00C1F2DB /* Coffee TimeTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5C032E372E9009CA00C1F2DB /* Build configuration list for PBXNativeTarget "Coffe TimeTests" */;
+			buildConfigurationList = 5C032E372E9009CA00C1F2DB /* Build configuration list for PBXNativeTarget "Coffee TimeTests" */;
 			buildPhases = (
 				5C032E1C2E9009CA00C1F2DB /* Sources */,
 				5C032E1D2E9009CA00C1F2DB /* Frameworks */,
@@ -131,18 +131,18 @@
 				5C032E222E9009CA00C1F2DB /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				5C032E232E9009CA00C1F2DB /* Coffe TimeTests */,
+				5C032E232E9009CA00C1F2DB /* Coffee TimeTests */,
 			);
-			name = "Coffe TimeTests";
+			name = "Coffee TimeTests";
 			packageProductDependencies = (
 			);
 			productName = "Coffe TimeTests";
-			productReference = 5C032E202E9009CA00C1F2DB /* Coffe TimeTests.xctest */;
+			productReference = 5C032E202E9009CA00C1F2DB /* Coffee TimeTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		5C032E292E9009CA00C1F2DB /* Coffe TimeUITests */ = {
+		5C032E292E9009CA00C1F2DB /* Coffee TimeUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5C032E3A2E9009CA00C1F2DB /* Build configuration list for PBXNativeTarget "Coffe TimeUITests" */;
+			buildConfigurationList = 5C032E3A2E9009CA00C1F2DB /* Build configuration list for PBXNativeTarget "Coffee TimeUITests" */;
 			buildPhases = (
 				5C032E262E9009CA00C1F2DB /* Sources */,
 				5C032E272E9009CA00C1F2DB /* Frameworks */,
@@ -154,13 +154,13 @@
 				5C032E2C2E9009CA00C1F2DB /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				5C032E2D2E9009CA00C1F2DB /* Coffe TimeUITests */,
+				5C032E2D2E9009CA00C1F2DB /* Coffee TimeUITests */,
 			);
-			name = "Coffe TimeUITests";
+			name = "Coffee TimeUITests";
 			packageProductDependencies = (
 			);
 			productName = "Coffe TimeUITests";
-			productReference = 5C032E2A2E9009CA00C1F2DB /* Coffe TimeUITests.xctest */;
+			productReference = 5C032E2A2E9009CA00C1F2DB /* Coffee TimeUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5C032E0E2E9009C800C1F2DB /* Build configuration list for PBXProject "Coffe Time" */;
+			buildConfigurationList = 5C032E0E2E9009C800C1F2DB /* Build configuration list for PBXProject "Coffee Time" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5C032E122E9009C800C1F2DB /* Coffe Time */,
-				5C032E1F2E9009CA00C1F2DB /* Coffe TimeTests */,
-				5C032E292E9009CA00C1F2DB /* Coffe TimeUITests */,
+				5C032E122E9009C800C1F2DB /* Coffee Time */,
+				5C032E1F2E9009CA00C1F2DB /* Coffee TimeTests */,
+				5C032E292E9009CA00C1F2DB /* Coffee TimeUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		5C032E222E9009CA00C1F2DB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5C032E122E9009C800C1F2DB /* Coffe Time */;
+			target = 5C032E122E9009C800C1F2DB /* Coffee Time */;
 			targetProxy = 5C032E212E9009CA00C1F2DB /* PBXContainerItemProxy */;
 		};
 		5C032E2C2E9009CA00C1F2DB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 5C032E122E9009C800C1F2DB /* Coffe Time */;
+			target = 5C032E122E9009C800C1F2DB /* Coffee Time */;
 			targetProxy = 5C032E2B2E9009CA00C1F2DB /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -469,7 +469,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Coffe Time.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Coffe Time";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Coffee Time.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Coffee Time";
 			};
 			name = Debug;
 		};
@@ -490,7 +490,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Coffe Time.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Coffe Time";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Coffee Time.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Coffee Time";
 			};
 			name = Release;
 		};
@@ -535,7 +535,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5C032E0E2E9009C800C1F2DB /* Build configuration list for PBXProject "Coffe Time" */ = {
+		5C032E0E2E9009C800C1F2DB /* Build configuration list for PBXProject "Coffee Time" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5C032E322E9009CA00C1F2DB /* Debug */,
@@ -544,7 +544,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5C032E342E9009CA00C1F2DB /* Build configuration list for PBXNativeTarget "Coffe Time" */ = {
+		5C032E342E9009CA00C1F2DB /* Build configuration list for PBXNativeTarget "Coffee Time" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5C032E352E9009CA00C1F2DB /* Debug */,
@@ -553,7 +553,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5C032E372E9009CA00C1F2DB /* Build configuration list for PBXNativeTarget "Coffe TimeTests" */ = {
+		5C032E372E9009CA00C1F2DB /* Build configuration list for PBXNativeTarget "Coffee TimeTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5C032E382E9009CA00C1F2DB /* Debug */,
@@ -562,7 +562,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5C032E3A2E9009CA00C1F2DB /* Build configuration list for PBXNativeTarget "Coffe TimeUITests" */ = {
+		5C032E3A2E9009CA00C1F2DB /* Build configuration list for PBXNativeTarget "Coffee TimeUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5C032E3B2E9009CA00C1F2DB /* Debug */,
